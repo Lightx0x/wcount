@@ -1,34 +1,9 @@
-// use std::{env, process};
-// use wcount::{Config, run};
+use std::error::Error;
 use clap::Parser;
+use wcount::{Cli, run};
 
-#[derive(Debug, Parser)]
-#[command(version, about)]
-struct Cli {
-    file_path: String,
-    /// lines count only
-    #[arg(short, long)]
-    lines: bool,
-    /// words count only
-    #[arg(short, long)]
-    words: bool,
-    /// characters count only
-    #[arg(short, long)]
-    chars: bool
-}
+fn main() -> Result<(), Box<dyn Error>> {
+    let cli = Cli::parse();
 
-fn main() {
-let cli = Cli::parse();
-println!("{cli:?}");
-/*
-    let config = Config::build(env::args()).unwrap_or_else(|err| {
-        eprintln!("Problem parsing arguments: {err}");
-        process::exit(1)
-    });
-
-    if let Err(e) = run(config) {
-        eprintln!("Application error: {e}");
-        process::exit(1);
-    }
-*/
+    run(cli)
 }
