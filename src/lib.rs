@@ -40,19 +40,22 @@ pub fn run(cli: Cli) -> Result<(), Box<dyn Error>> {
     let text_content =
         fs::read_to_string(&cli.file_path).map_err(|e| format!("{e} => {}", cli.file_path))?;
     let content_count = counts(&text_content);
-
+    
+    let mut parts = Vec::new();
     let show_all = !cli.lines && !cli.words && !cli.chars;
     if cli.lines || show_all {
-        println!("lines: {}", content_count.lines);
+        parts.push(format!("lines: {}", content_count.lines));
     }
 
     if cli.words || show_all {
-        println!("words: {}", content_count.words);
+        parts.push(format!("words: {}", content_count.words));
     }
 
     if cli.chars || show_all {
-        println!("chars: {}", content_count.chars);
+        parts.push(format!("chars: {}", content_count.chars));
     }
+
+    println!("{}", parts.join(", "));
 
     Ok(())
 }
