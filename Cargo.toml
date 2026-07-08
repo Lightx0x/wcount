@@ -8,6 +8,7 @@ repository = "https://github.com/Lightx0x/weez"
 readme = "README.md"
 keywords = ["cli", "wc", "count", "text"]
 categories = ["command-line-utilities"]
+exclude = ["poem.txt"]
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
