@@ -1,7 +1,13 @@
 [package]
-name = "wcount"
+name = "weez"
 version = "0.1.0"
 edition = "2024"
+description = "A wc-style line, word, and character counter with stdin support"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/Lightx0x/weez"
+readme = "README.md"
+keywords = ["cli", "wc", "count", "text"]
+categories = ["command-line-utilities"]
 
 [dependencies]
-clap = { version = "4.6.1", features = ["derive"] }
+clap = { version = "4", features = ["derive"] }
