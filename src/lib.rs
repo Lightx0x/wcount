@@ -1,11 +1,13 @@
 use clap::Parser;
 use std::error::Error;
 use std::fs;
+use std::path::PathBuf;
+use std::io::{self, Read};
 
 #[derive(Debug, Parser)]
 #[command(version, about)]
 pub struct Cli {
-    file_path: String,
+    file_path: Option<PathBuf>,
     /// lines count only
     #[arg(short, long)]
     lines: bool,
@@ -37,12 +39,19 @@ fn counts(text: &str) -> Counter {
 }
 
 pub fn run(cli: Cli) -> Result<(), Box<dyn Error>> {
-    let text_content =
-        fs::read_to_string(&cli.file_path).map_err(|e| format!("{e} => {}", cli.file_path))?;
+    let text_content = match &cli.file_path {
+       Some(path) => fs::read_to_string(path)
+           .map_err(|e| format!("{e} => {}", path.display()))?,
+        None => {
+            let mut buf = String::new();
+            io::stdin().read_to_string(&mut buf)?;
+            buf
+        }
+    };
     let content_count = counts(&text_content);
-    
-    let mut parts = Vec::new();
+
     let show_all = !cli.lines && !cli.words && !cli.chars;
+    let mut parts = Vec::new();
     if cli.lines || show_all {
         parts.push(format!("lines: {}", content_count.lines));
     }
