@@ -1,8 +1,8 @@
 use clap::Parser;
-use std::error::Error;
 use std::fs;
 use std::io::{self, Read};
 use std::path::PathBuf;
+use anyhow::{Result, Context};
 
 #[derive(Debug, Parser)]
 #[command(version, about)]
@@ -38,12 +38,14 @@ fn counts(text: &str) -> Counter {
     }
 }
 
-pub fn run(cli: Cli) -> Result<(), Box<dyn Error>> {
+pub fn run(cli: Cli) -> Result<()> {
     let text_content = match &cli.file_path {
-        Some(path) => fs::read_to_string(path).map_err(|e| format!("{e} => {}", path.display()))?,
+        Some(path) => fs::read_to_string(path)
+            .with_context(|| format!("Can't read file {}", path.display()))?,
         None => {
             let mut buf = String::new();
-            io::stdin().read_to_string(&mut buf)?;
+            io::stdin().read_to_string(&mut buf)
+                .context("Can't read from stdin")?;
             buf
         }
     };
